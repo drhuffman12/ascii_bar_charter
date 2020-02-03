@@ -53,7 +53,13 @@ For other examples, see the tests.
 
 ## Testing
 
-To run tests:
+(Optionally,) open a `docker-compose` terminal:
+
+```bash
+docker-compose run app bash
+```
+
+Then run tests:
 
 ```crystal
 crystal spec
