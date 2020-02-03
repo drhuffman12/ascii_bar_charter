@@ -1,6 +1,8 @@
 # ascii_bar_charter
 
-CircleCI status: [![CircleCI](https://circleci.com/gh/drhuffman12/ascii_bar_charter.svg?style=svg)](https://circleci.com/gh/drhuffman12/ascii_bar_charter)
+Travis status: [![Travis](https://travis-ci.com/drhuffman12/ascii_bar_charter.svg?branch=master)](https://travis-ci.com/drhuffman12/ascii_bar_charter)
+
+<!-- CircleCI status: [![CircleCI](https://circleci.com/gh/drhuffman12/ascii_bar_charter.svg?style=svg)](https://circleci.com/gh/drhuffman12/ascii_bar_charter) -->
 
 [![GitHub release](https://img.shields.io/github/release/drhuffman12/ascii_bar_charter.js.svg)](https://GitHub.com/drhuffman12/ascii_bar_charter.js/releases/)
 
