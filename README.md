@@ -1,5 +1,7 @@
 # ascii_bar_charter
 
+CircleCI status: [![CircleCI](https://circleci.com/gh/drhuffman12/ascii_bar_charter.svg?style=svg)](https://circleci.com/gh/drhuffman12/ascii_bar_charter)
+
 This is a ASCII character-based bar char generator, with optional value prefix (of given precision) and optional colorization (red/green gradations).
 
 ## Installation
