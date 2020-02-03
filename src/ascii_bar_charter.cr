@@ -4,15 +4,15 @@ require "colorize"
 class AsciiBarCharter
   VERSION = "1.0.0"
 
-  BAR_CHARS = ['_','\u2581','\u2582','\u2583','\u2584','\u2585','\u2586','\u2587','\u2588','\u2589','\u258A']
+  BAR_CHARS    = ['_', '\u2581', '\u2582', '\u2583', '\u2584', '\u2585', '\u2586', '\u2587', '\u2588', '\u2589', '\u258A']
   BAR_STEP_QTY = BAR_CHARS.size - 1 # first char is a 'floor', not a 'step'
-  BAR_COLORS = [:blue,:green,:green,:light_green,:light_green,:yellow,:yellow,:light_red,:light_red,:red,:red]
+  BAR_COLORS   = [:blue, :green, :green, :light_green, :light_green, :yellow, :yellow, :light_red, :light_red, :red, :red]
 
   getter min, max, min_max_delta : Float64, precision, in_bw, inverted
-  
+
   def initialize(@min : Float64, @max : Float64, @precision : Int8, @in_bw = false, @inverted = false)
     @min_max_delta = 1.0 * (max - min)
-    @bar_colors = !in_bw &&@inverted ? BAR_COLORS.reverse : BAR_COLORS
+    @bar_colors = !in_bw && @inverted ? BAR_COLORS.reverse : BAR_COLORS
   end
 
   def plot(data, prefixed = false)
