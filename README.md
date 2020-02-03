@@ -15,7 +15,7 @@ This is a ASCII character-based bar char generator, with optional value prefix (
    ```yaml
    dependencies:
      ascii_bar_charter:
-       github: your-github-user/ascii_bar_charter
+       github: drhuffman12/ascii_bar_charter
    ```
 
 2. Run `shards install`
