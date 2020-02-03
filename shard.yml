@@ -1,0 +1,9 @@
+name: ascii_bar_charter
+version: 0.1.0
+
+authors:
+  - Daniel Huffman <drhuffman12@gmail.com>
+
+crystal: 0.32.1
+
+license: MIT

@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+crystal eval 'require "./src/ascii_bar_charter"; puts "AsciiBarCharter version: #{AsciiBarCharter::VERSION}"'
