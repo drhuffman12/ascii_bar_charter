@@ -8,6 +8,10 @@ jobs:
       - run: shards install
       - run:
           name: run tests
+          # TODO: fix color terminal
+          # environment:
+          #   # TERM: xterm-color
+          #   TERM: dumb
           command: |
             mkdir -p test-results/spec
             crystal -v > test-results/crystal_version.txt
