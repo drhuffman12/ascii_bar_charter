@@ -2,7 +2,7 @@
 require "colorize"
 
 class AsciiBarCharter
-  VERSION = "1.0.0"
+  VERSION = "1.0.1"
 
   BAR_CHARS    = ['_', '\u2581', '\u2582', '\u2583', '\u2584', '\u2585', '\u2586', '\u2587', '\u2588', '\u2589', '\u258A']
   BAR_STEP_QTY = BAR_CHARS.size - 1 # first char is a 'floor', not a 'step'
