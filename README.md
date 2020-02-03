@@ -16,6 +16,7 @@ This is a ASCII character-based bar char generator, with optional value prefix (
    dependencies:
      ascii_bar_charter:
        github: drhuffman12/ascii_bar_charter
+       branch: master
    ```
 
 2. Run `shards install`
