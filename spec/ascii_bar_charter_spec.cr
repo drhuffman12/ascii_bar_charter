@@ -1,350 +1,125 @@
 require "./spec_helper"
 
 describe AsciiBarCharter do
+  describe "#initialize" do
+    # TODO
+  end
+
   describe "#plot" do
-    describe "given a range of 0.0 to 1.0 with precision of 2 and" do
-      describe "color enabled" do
-        describe "prefix enabled" do
-          describe "and reverse disabled" do
-            it "will return color-escaped bars from with prefix numbers ranging from 0.0 to 1.0 in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = false
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = true
-              reversed = false
-              expected_graph_chars = "0.0\e[34;47m_\e[0m" +
-                                     "0.1\e[32;47m▁\e[0m" +
-                                     "0.2\e[32;47m▂\e[0m" +
-                                     "0.3\e[92;47m▃\e[0m" +
-                                     "0.4\e[92;47m▄\e[0m" +
-                                     "0.5\e[33;47m▅\e[0m" +
-                                     "0.6\e[33;47m▆\e[0m" +
-                                     "0.7\e[91;47m▇\e[0m" +
-                                     "0.8\e[91;47m█\e[0m" +
-                                     "0.9\e[31;47m▉\e[0m"
+    bar_chars_custom = AsciiBarCharter::BAR_CHARS_ALT
+    # TODO: test for usage of colors like `Colorize::ColorRGB.new(0, 255, 255)`
+    bar_colors_custom = AsciiBarCharter::BAR_COLORS_ALT
 
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
+    min = -1.0
+    max = 1.0
+    dist = max - min
+    precision = 3.to_i8
+    step_max = bar_chars_custom.size - 1
+    data = (0..step_max).to_a.map { |i| (dist * i / step_max + min).round(precision) }
 
-              puts plot + "\n"
+    params_main = {
+      min:       min,
+      max:       max,
+      precision: precision,
 
-              plot.should eq(expected_graph_chars)
-            end
+      in_bw:           false,
+      inverted_bars:   false,
+      inverted_colors: false,
 
-            context "with range of 0 to 8 and precision of 3" do
-              it "will return color-escaped bars from with prefix numbers ranging from 0.0 to 8.0 in green to red colors and max precision of 3" do
-                min = 0.0
-                max = 1.0
-                precision = 3.to_i8
-                in_bw = false
-                data = (0..8).to_a.map { |i| (i / 8.0).round(precision) }
-                prefixed = true
-                reversed = false
-                expected_graph_chars = "0.0\e[34;47m_\e[0m" +
-                                       "0.125\e[32;47m▁\e[0m" +
-                                       "0.25\e[92;47m▃\e[0m" +
-                                       "0.375\e[92;47m▄\e[0m" +
-                                       "0.5\e[33;47m▅\e[0m" +
-                                       "0.625\e[33;47m▆\e[0m" +
-                                       "0.75\e[91;47m█\e[0m" +
-                                       "0.875\e[31;47m▉\e[0m" +
-                                       "1.0\e[31;47m▊\e[0m"
+      bar_chars:  AsciiBarCharter::BAR_CHARS,
+      bar_colors: AsciiBarCharter::BAR_COLORS,
+      bkgd_color: AsciiBarCharter::BKGD_COLOR,
+    }
 
-                charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-                plot = charter.plot(data, prefixed)
+    expected_graph_chars_per_params_without_prefix = {
+      params_main.merge({in_bw: true}) => "▿_▁▂▃▄▄▅▆▇█▴",
+      params_main.merge({in_bw: true, inverted_bars: true}) => "1",
+      params_main => "2",
+      params_main.merge({inverted_colors: true, inverted_bars: true}) => "3b",
+      params_main.merge({inverted_colors: true}) => "3",
+      params_main.merge({inverted_bars: true}) => "4",
+      params_main.merge({bar_colors: bar_colors_custom}) => "5",
+      params_main.merge({bar_colors: bar_colors_custom, inverted_bars: true, inverted_colors: true}) => "8",
+      params_main.merge({bar_colors: bar_colors_custom, inverted_colors: true}) => "7",
+      params_main.merge({bar_colors: bar_colors_custom, inverted_bars: true}) => "6",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom, in_bw: true}) => "■□▫☾◵◉◉◷☽▹▷▶",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom, in_bw: true, inverted_bars: true}) => "■□▫☾◵◉◉◷☽▹▷▶",
+      params_main.merge({bar_chars: bar_chars_custom}) => "9",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom}) => "10",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom, inverted_bars: true}) => "11",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom, inverted_colors: true}) => "12",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom, inverted_bars: true, inverted_colors: true}) => "13",
+    }
+    expected_graph_chars_per_params_with_prefix = {
+      params_main.merge({in_bw: true}) => "-1.0▿-0.818_-0.636▁-0.455▂-0.273▃-0.091▄0.091▄0.273▅0.455▆0.636▇0.818█1.0▴",
+      params_main.merge({in_bw: true, inverted_bars: true}) => "1",
+      params_main => "2",
+      params_main.merge({inverted_colors: true, inverted_bars: true}) => "3b",
+      params_main.merge({inverted_colors: true}) => "3",
+      params_main.merge({inverted_bars: true}) => "4",
+      params_main.merge({bar_colors: bar_colors_custom}) => "5",
+      params_main.merge({bar_colors: bar_colors_custom, inverted_bars: true, inverted_colors: true}) => "8",
+      params_main.merge({bar_colors: bar_colors_custom, inverted_colors: true}) => "7",
+      params_main.merge({bar_colors: bar_colors_custom, inverted_bars: true}) => "6",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom, in_bw: true}) => "xxx",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom, in_bw: true, inverted_bars: true}) => "xxx",
+      params_main.merge({bar_chars: bar_chars_custom}) => "9",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom}) => "10",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom, inverted_bars: true}) => "11",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom, inverted_colors: true}) => "12",
+      params_main.merge({bar_chars: bar_chars_custom, bar_colors: bar_colors_custom, inverted_bars: true, inverted_colors: true}) => "13",
+    }
 
-                puts plot + "\n"
-
-                plot.should eq(expected_graph_chars)
-              end
-            end
-          end
-
-          describe "and reverse enabled" do
-            it "it will return color-escaped bars from with prefix numbers ranging from 0.0 to 1.0 in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = false
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = true
-              reversed = true
-              expected_graph_chars = "0.0\e[31;47m_\e[0m" +
-                                     "0.1\e[31;47m▁\e[0m" +
-                                     "0.2\e[91;47m▂\e[0m" +
-                                     "0.3\e[91;47m▃\e[0m" +
-                                     "0.4\e[33;47m▄\e[0m" +
-                                     "0.5\e[33;47m▅\e[0m" +
-                                     "0.6\e[92;47m▆\e[0m" +
-                                     "0.7\e[92;47m▇\e[0m" +
-                                     "0.8\e[32;47m█\e[0m" +
-                                     "0.9\e[32;47m▉\e[0m"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-        end
-
-        describe "prefix disabled" do
-          describe "and reverse disabled" do
-            it "will return color-escaped bars from without prefix numbers in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = false
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = false
-              reversed = false
-              expected_graph_chars = "\e[34;47m_\e[0m" +
-                                     "\e[32;47m▁\e[0m" +
-                                     "\e[32;47m▂\e[0m" +
-                                     "\e[92;47m▃\e[0m" +
-                                     "\e[92;47m▄\e[0m" +
-                                     "\e[33;47m▅\e[0m" +
-                                     "\e[33;47m▆\e[0m" +
-                                     "\e[91;47m▇\e[0m" +
-                                     "\e[91;47m█\e[0m" +
-                                     "\e[31;47m▉\e[0m"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-
-          describe "and reverse enabled" do
-            it "will return color-escaped bars from without prefix numbers in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = false
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = false
-              reversed = true
-              expected_graph_chars = "\e[31;47m_\e[0m" +
-                                     "\e[31;47m▁\e[0m" +
-                                     "\e[91;47m▂\e[0m" +
-                                     "\e[91;47m▃\e[0m" +
-                                     "\e[33;47m▄\e[0m" +
-                                     "\e[33;47m▅\e[0m" +
-                                     "\e[92;47m▆\e[0m" +
-                                     "\e[92;47m▇\e[0m" +
-                                     "\e[32;47m█\e[0m" +
-                                     "\e[32;47m▉\e[0m"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-        end
-      end
-
-      describe "color disabled" do
-        describe "prefix enabled" do
-          describe "and reverse disabled" do
-            it "will return color-escaped bars from with prefix numbers ranging from 0.0 to 1.0 in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = true
-              reversed = false
-              expected_graph_chars = "0.0_0.1▁0.2▂0.3▃0.4▄0.5▅0.6▆0.7▇0.8█0.9▉"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-
-          describe "and reverse enabled" do
-            it "it will return color-escaped bars from with prefix numbers ranging from 0.0 to 1.0 in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = true
-              reversed = true
-              expected_graph_chars = "0.0_0.1▁0.2▂0.3▃0.4▄0.5▅0.6▆0.7▇0.8█0.9▉"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              # Expected: "0.0\e[34;47m_\e[0m0.1\e[32;47m▁\e[0m0.2\e[32;47m▂\e[0m0.3\e[92;47m▃\e[0m0.4\e[92;47m▄\e[0m0.5\e[33;47m▅\e[0m0.6\e[33;47m▆\e[0m0.7\e[91;47m▇\e[0m0.8\e[91;47m█\e[0m0.9\e[31;47m▉\e[0m"
-              # got: "0.0\e[31;47m_\e[0m0.1\e[31;47m▁\e[0m0.2\e[91;47m▂\e[0m0.3\e[91;47m▃\e[0m0.4\e[33;47m▄\e[0m0.5\e[33;47m▅\e[0m0.6\e[92;47m▆\e[0m0.7\e[92;47m▇\e[0m0.8\e[32;47m█\e[0m0.9\e[32;47m▉\e[0m"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-        end
-
-        describe "prefix disabled" do
-          describe "and reverse disabled" do
-            it "will return color-escaped bars from without prefix numbers in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = false
-              reversed = false
-              expected_graph_chars = "_▁▂▃▄▅▆▇█▉"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-
-          describe "and reverse enabled" do
-            it "will return color-escaped bars from without prefix numbers in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = false
-              reversed = true
-              expected_graph_chars = "_▁▂▃▄▅▆▇█▉"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-        end
-      end
-
-      describe "custom chars and colors" do
-
-        # @bar_chars = new_bar_chars
-        # @bar_colors = new_bar_colors
-
-        bar_chars_custom    = ['\'', '\u2591', '\u2592', '\u2593', '\u2588']
-        # BAR_STEP_QTY = BAR_CHARS.size - 1 # first char is a 'floor', not a 'step'
-        bar_colors_custom   = [:red, :green, :blue, :purple, :orange
-          # Colorize::ColorRGB.new(0, 255, 255),
-          # Colorize::ColorRGB.new(255, 0, 255),
-          # Colorize::ColorRGB.new(255, 255, 0),
-          # Colorize::ColorRGB.new(255, 0, 255),
-          # Colorize::ColorRGB.new(0, 255, 255)
-        ]
-
-
-        describe "prefix enabled" do
-          describe "and reverse disabled" do
-            it "will return color-escaped bars from with prefix numbers ranging from 0.0 to 1.0 in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = true
-              reversed = false
-              expected_graph_chars = "0.0'0.1'0.2░0.3░0.4▒0.5▒0.6▒0.7▓0.8▓0.9█"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed, bar_chars: bar_chars_custom, bar_colors: bar_colors_custom)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-
-          describe "and reverse enabled" do
-            it "it will return color-escaped bars from with prefix numbers ranging from 0.0 to 1.0 in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = true
-              reversed = true
-              expected_graph_chars = "0.0'0.1'0.2░0.3░0.4▒0.5▒0.6▒0.7▓0.8▓0.9█"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed, bar_chars: bar_chars_custom, bar_colors: bar_colors_custom)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              # Expected: "0.0\e[34;47m_\e[0m0.1\e[32;47m▁\e[0m0.2\e[32;47m▂\e[0m0.3\e[92;47m▃\e[0m0.4\e[92;47m▄\e[0m0.5\e[33;47m▅\e[0m0.6\e[33;47m▆\e[0m0.7\e[91;47m▇\e[0m0.8\e[91;47m█\e[0m0.9\e[31;47m▉\e[0m"
-              # got: "0.0\e[31;47m_\e[0m0.1\e[31;47m▁\e[0m0.2\e[91;47m▂\e[0m0.3\e[91;47m▃\e[0m0.4\e[33;47m▄\e[0m0.5\e[33;47m▅\e[0m0.6\e[92;47m▆\e[0m0.7\e[92;47m▇\e[0m0.8\e[32;47m█\e[0m0.9\e[32;47m▉\e[0m"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-        end
-
-        describe "prefix disabled" do
-          describe "and reverse disabled" do
-            it "will return color-escaped bars from without prefix numbers in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = false
-              reversed = false
-              expected_graph_chars = "''░░▒▒▒▓▓█"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed, bar_chars: bar_chars_custom, bar_colors: bar_colors_custom)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-
-          describe "and reverse enabled" do
-            it "will return color-escaped bars from without prefix numbers in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = false
-              reversed = true
-              expected_graph_chars = "''░░▒▒▒▓▓█"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed, bar_chars: bar_chars_custom, bar_colors: bar_colors_custom)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
+    context "when prefixed turned off" do
+      prefixed = false
+      expected_graph_chars_per_params_without_prefix.each do |params, expected_graph_chars|
+        it "when initialized with params #{params}, it should generate expected (un)colorized bars: #{expected_graph_chars}" do
+          charter = AsciiBarCharter.new(**params)
+          plot = charter.plot(data, prefixed)
+          puts plot + "\n"
+          plot.should eq(expected_graph_chars)
         end
       end
     end
+
+    context "when prefixed turned on" do
+      prefixed = true
+      expected_graph_chars_per_params_with_prefix.each do |params, expected_graph_chars|
+        it "when initialized with params #{params}, it should generate expected (un)colorized bars: #{expected_graph_chars}" do
+          charter = AsciiBarCharter.new(**params)
+          plot = charter.plot(data, prefixed)
+          puts plot + "\n"
+          plot.should eq(expected_graph_chars)
+        end
+      end
+    end
+  end
+
+  describe "#bar" do
+    # TODO
+  end
+
+  describe "#bar_prefixed_with_number" do
+    # TODO
+  end
+
+  describe "#validate!" do
+    # TODO
+  end
+
+  describe "#toggle_bw" do
+    # TODO
+  end
+
+  describe "#reset_bars" do
+    # TODO
+  end
+
+  describe "#reset_bar_chars" do
+    # TODO
+  end
+
+  describe "#reset_bar_colors" do
+    # TODO
   end
 end
