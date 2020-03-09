@@ -54,7 +54,7 @@ class AsciiBarCharter
 
   def initialize(
     @min : Float64, @max : Float64, @precision : Int8,
-    @bar_chars = BAR_CHARS, @bar_colors = BAR_COLORS, @bkgd_color = BGKD_COLOR,
+    @bar_chars = BAR_CHARS, @bar_colors = BAR_COLORS, @bkgd_color = BKGD_COLOR,
     @in_bw = false, @inverted_chars = false, @inverted_colors = false
   )
     @min_max_delta = 1.0 * (max - min)
