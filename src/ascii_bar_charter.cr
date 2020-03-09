@@ -36,14 +36,14 @@ class AsciiBarCharter
     :light_cyan, :light_green, :green,
     :blue,
   ]
-  
+
   BKGD_COLOR = :white
 
   getter min, max, min_max_delta : Float64, precision
   getter in_bw             # if true, don't colorize
   property inverted_colors # flips bar_chars
-  property inverted_bars   # flips bar_colors
-  getter bar_chars
+  property inverted_chars   # flips bar_colors
+  property bar_chars
 
   # TODO: allow usage of colors like `Colorize::ColorRGB.new(0, 255, 255)`
   # i.e.: `getter bar_colors : Array(Symbol | Colorize::ColorRGB)`
@@ -54,12 +54,66 @@ class AsciiBarCharter
 
   def initialize(
     @min : Float64, @max : Float64, @precision : Int8,
-    @in_bw = false, @inverted_bars = false, @inverted_colors = false,
-    @bar_chars = BAR_CHARS, @bar_colors = BAR_COLORS, @bkgd_color = BGKD_COLOR
+    @bar_chars = BAR_CHARS, @bar_colors = BAR_COLORS, @bkgd_color = BGKD_COLOR,
+    @in_bw = false, @inverted_chars = false, @inverted_colors = false
   )
     @min_max_delta = 1.0 * (max - min)
     @bar_step_qty = @bar_chars.size
     validate!
+  end
+
+  def self.permutations(
+    min = -1.0, max = 1.0, precision = 3.to_i8,
+    bar_chars = AsciiBarCharter::BAR_CHARS, bar_colors = AsciiBarCharter::BAR_COLORS, bkgd_color = AsciiBarCharter::BKGD_COLOR,
+    in_bw = false, inverted_chars = false, inverted_colors = false
+  )
+    dist = max - min
+    step_max = bar_chars.size - 1
+    data = (0..step_max).to_a.map { |i| (dist * i / step_max + min).round(precision) }
+
+    params_main = {
+      min:       min,
+      max:       max,
+      precision: precision,
+
+      bar_chars:  bar_chars,
+      bar_colors: bar_colors,
+      bkgd_color: bkgd_color,
+
+      in_bw:           in_bw,
+      inverted_chars:   inverted_chars,
+      inverted_colors: inverted_colors,
+    }
+
+    param_combos_without_prefix = {
+      params_main.merge({in_bw: true}) => "",
+      params_main.merge({in_bw: true, inverted_chars: true}) => "",
+      # Below are dups of above since in_bw is true
+      # params_main.merge({in_bw: true, inverted_colors: true}) => "",
+      # params_main.merge({in_bw: true, inverted_chars: true, inverted_colors: true}) => ""
+      params_main => "",
+      params_main.merge({inverted_chars: true}) => "",
+      params_main.merge({inverted_colors: true}) => "",
+      params_main.merge({inverted_chars: true, inverted_colors: true}) => "",
+    }
+
+    param_combos_without_prefix.each { |hash_entry| param_combos_without_prefix[hash_entry[0]] = self.new(**hash_entry[0]).plot(data) }
+
+    param_combos_with_prefix = {
+      params_main.merge({in_bw: true}) => "",
+      params_main.merge({in_bw: true, inverted_chars: true}) => "",
+      # Below are dups of above since in_bw is true
+      # params_main.merge({in_bw: true, inverted_colors: true}) => "",
+      # params_main.merge({in_bw: true, inverted_chars: true, inverted_colors: true}) => ""
+      params_main => "",
+      params_main.merge({inverted_chars: true}) => "",
+      params_main.merge({inverted_colors: true}) => "",
+      params_main.merge({inverted_chars: true, inverted_colors: true}) => "",
+    }
+
+    param_combos_with_prefix.each { |hash_entry| param_combos_with_prefix[hash_entry[0]] = self.new(**hash_entry[0]).plot(data, true) }
+
+    {param_combos_without_prefix: param_combos_without_prefix, param_combos_with_prefix: param_combos_with_prefix}
   end
 
   def plot(data, prefixed = false)
@@ -73,7 +127,7 @@ class AsciiBarCharter
     f = 0.0 if f < 0.0
     f = 1.0 if f > 1.0
     i = (f * (bar_step_qty - 1)).round.to_i
-    adjusted_char_index = inverted_bars ? (@bar_step_qty - i - 1) : i
+    adjusted_char_index = inverted_chars ? (@bar_step_qty - i - 1) : i
     adjusted_color_index = inverted_colors ? (@bar_step_qty - i - 1) : i
     bar = @bar_chars[adjusted_char_index].to_s
     bar = bar.colorize.fore(@bar_colors[adjusted_color_index]).back(@bkgd_color).to_s unless in_bw
