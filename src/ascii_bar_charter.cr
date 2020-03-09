@@ -5,7 +5,7 @@ class AsciiBarCharter
   class AsciiBarError < Exception
   end
 
-  VERSION = "2.0.0pre"
+  VERSION = "1.1.0"
 
   BAR_CHARS = [
     '\u25BF',
