@@ -42,7 +42,7 @@ class AsciiBarCharter
   getter min, max, min_max_delta : Float64, precision
   getter in_bw             # if true, don't colorize
   property inverted_colors # flips bar_chars
-  property inverted_chars   # flips bar_colors
+  property inverted_chars  # flips bar_colors
   property bar_chars
 
   # TODO: allow usage of colors like `Colorize::ColorRGB.new(0, 255, 255)`
@@ -81,7 +81,7 @@ class AsciiBarCharter
       bkgd_color: bkgd_color,
 
       in_bw:           in_bw,
-      inverted_chars:   inverted_chars,
+      inverted_chars:  inverted_chars,
       inverted_colors: inverted_colors,
     }
 

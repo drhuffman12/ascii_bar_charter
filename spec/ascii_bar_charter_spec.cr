@@ -59,7 +59,7 @@ describe AsciiBarCharter do
       bkgd_color: AsciiBarCharter::BKGD_COLOR,
 
       in_bw:           false,
-      inverted_chars:   false,
+      inverted_chars:  false,
       inverted_colors: false,
     }
 
