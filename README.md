@@ -44,10 +44,18 @@ Generate a B/W barchart of values with associated value as a prefix:
   puts plot
 ```
 
-This will look like:
+This will (when in bw only) look like:
 
 ```
 0.0_0.1▁0.2▂0.3▃0.4▄0.5▅0.6▆0.7▇0.8█0.9▉
+_▁▂▃▄▅▆▇█▉
+```
+
+And, using custom colors/bars could look like:
+
+```
+.0.0'0.1'0.2░0.3░0.4▒0.5▒0.6▒0.7▓0.8▓0.9█
+.''░░▒▒▒▓▓█
 ```
 
 For other examples, see the tests.

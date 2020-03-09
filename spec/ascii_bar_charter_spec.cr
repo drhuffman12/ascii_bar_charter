@@ -1,246 +1,188 @@
 require "./spec_helper"
 
 describe AsciiBarCharter do
+  describe "#initialize" do
+    # TODO
+  end
+
   describe "#plot" do
-    describe "given a range of 0.0 to 1.0 with precision of 2 and" do
-      describe "color enabled" do
-        describe "prefix enabled" do
-          describe "and reverse disabled" do
-            it "will return color-escaped bars from with prefix numbers ranging from 0.0 to 1.0 in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = false
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = true
-              reversed = false
-              expected_graph_chars = "0.0\e[34;47m_\e[0m" +
-                                     "0.1\e[32;47m▁\e[0m" +
-                                     "0.2\e[32;47m▂\e[0m" +
-                                     "0.3\e[92;47m▃\e[0m" +
-                                     "0.4\e[92;47m▄\e[0m" +
-                                     "0.5\e[33;47m▅\e[0m" +
-                                     "0.6\e[33;47m▆\e[0m" +
-                                     "0.7\e[91;47m▇\e[0m" +
-                                     "0.8\e[91;47m█\e[0m" +
-                                     "0.9\e[31;47m▉\e[0m"
+    # TODO
+  end
 
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
+  describe "#bar" do
+    # TODO
+  end
 
-              puts plot + "\n"
+  describe "#bar_prefixed_with_number" do
+    # TODO
+  end
 
-              plot.should eq(expected_graph_chars)
-            end
+  describe "#validate!" do
+    # TODO
+  end
 
-            context "with range of 0 to 8 and precision of 3" do
-              it "will return color-escaped bars from with prefix numbers ranging from 0.0 to 8.0 in green to red colors and max precision of 3" do
-                min = 0.0
-                max = 1.0
-                precision = 3.to_i8
-                in_bw = false
-                data = (0..8).to_a.map { |i| (i / 8.0).round(precision) }
-                prefixed = true
-                reversed = false
-                expected_graph_chars = "0.0\e[34;47m_\e[0m" +
-                                       "0.125\e[32;47m▁\e[0m" +
-                                       "0.25\e[92;47m▃\e[0m" +
-                                       "0.375\e[92;47m▄\e[0m" +
-                                       "0.5\e[33;47m▅\e[0m" +
-                                       "0.625\e[33;47m▆\e[0m" +
-                                       "0.75\e[91;47m█\e[0m" +
-                                       "0.875\e[31;47m▉\e[0m" +
-                                       "1.0\e[31;47m▊\e[0m"
+  describe "#toggle_bw" do
+    # TODO
+  end
 
-                charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-                plot = charter.plot(data, prefixed)
+  describe "#reset_bars" do
+    # TODO
+  end
 
-                puts plot + "\n"
+  describe "#reset_bar_chars" do
+    # TODO
+  end
 
-                plot.should eq(expected_graph_chars)
-              end
-            end
-          end
+  describe "#reset_bar_colors" do
+    # TODO
+  end
 
-          describe "and reverse enabled" do
-            it "it will return color-escaped bars from with prefix numbers ranging from 0.0 to 1.0 in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = false
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = true
-              reversed = true
-              expected_graph_chars = "0.0\e[31;47m_\e[0m" +
-                                     "0.1\e[31;47m▁\e[0m" +
-                                     "0.2\e[91;47m▂\e[0m" +
-                                     "0.3\e[91;47m▃\e[0m" +
-                                     "0.4\e[33;47m▄\e[0m" +
-                                     "0.5\e[33;47m▅\e[0m" +
-                                     "0.6\e[92;47m▆\e[0m" +
-                                     "0.7\e[92;47m▇\e[0m" +
-                                     "0.8\e[32;47m█\e[0m" +
-                                     "0.9\e[32;47m▉\e[0m"
+  describe "#permutations" do
+    bar_chars = AsciiBarCharter::BAR_CHARS
+    # TODO: test for usage of colors like `Colorize::ColorRGB.new(0, 255, 255)`
+    bar_colors = AsciiBarCharter::BAR_COLORS
 
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
+    min = -1.0
+    max = 1.0
+    dist = max - min
+    precision = 3.to_i8
+    step_max = bar_chars.size - 1
+    data = (0..step_max).to_a.map { |i| (dist * i / step_max + min).round(precision) }
 
-              puts plot + "\n"
+    params_main = {
+      min:       min,
+      max:       max,
+      precision: precision,
 
-              plot.should eq(expected_graph_chars)
-            end
-          end
-        end
+      bar_chars:  bar_chars,
+      bar_colors: bar_colors,
+      bkgd_color: AsciiBarCharter::BKGD_COLOR,
 
-        describe "prefix disabled" do
-          describe "and reverse disabled" do
-            it "will return color-escaped bars from without prefix numbers in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = false
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = false
-              reversed = false
-              expected_graph_chars = "\e[34;47m_\e[0m" +
-                                     "\e[32;47m▁\e[0m" +
-                                     "\e[32;47m▂\e[0m" +
-                                     "\e[92;47m▃\e[0m" +
-                                     "\e[92;47m▄\e[0m" +
-                                     "\e[33;47m▅\e[0m" +
-                                     "\e[33;47m▆\e[0m" +
-                                     "\e[91;47m▇\e[0m" +
-                                     "\e[91;47m█\e[0m" +
-                                     "\e[31;47m▉\e[0m"
+      in_bw:           false,
+      inverted_chars:  false,
+      inverted_colors: false,
+    }
 
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
+    context "with all defaults" do
+      expected_permutations = {
+        param_combos_without_prefix: {
+          params_main.merge({in_bw: true}) => "▿_▁▂▃▄▅▆▇█▴",
+          params_main.merge({in_bw: true, inverted_chars: true}) => "▴█▇▆▅▄▃▂▁_▿",
+          # Below are dups of above since in_bw is true
+          # params_main.merge({in_bw: true, inverted_colors: true}) => "",
+          # params_main.merge({in_bw: true, inverted_chars: true, inverted_colors: true}) => ""
+          params_main => "\e[34;107m▿\e[0m\e[94;107m_\e[0m\e[36;107m▁\e[0m\e[96;107m▂\e[0m\e[32;107m▃\e[0m\e[92;107m▄\e[0m\e[33;107m▅\e[0m\e[95;107m▆\e[0m\e[35;107m▇\e[0m\e[91;107m█\e[0m\e[31;107m▴\e[0m",
+          params_main.merge({inverted_chars: true}) => "\e[34;107m▴\e[0m\e[94;107m█\e[0m\e[36;107m▇\e[0m\e[96;107m▆\e[0m\e[32;107m▅\e[0m\e[92;107m▄\e[0m\e[33;107m▃\e[0m\e[95;107m▂\e[0m\e[35;107m▁\e[0m\e[91;107m_\e[0m\e[31;107m▿\e[0m",
+          params_main.merge({inverted_colors: true}) => "\e[31;107m▿\e[0m\e[91;107m_\e[0m\e[35;107m▁\e[0m\e[95;107m▂\e[0m\e[33;107m▃\e[0m\e[92;107m▄\e[0m\e[32;107m▅\e[0m\e[96;107m▆\e[0m\e[36;107m▇\e[0m\e[94;107m█\e[0m\e[34;107m▴\e[0m",
+          params_main.merge({inverted_chars: true, inverted_colors: true}) => "\e[31;107m▴\e[0m\e[91;107m█\e[0m\e[35;107m▇\e[0m\e[95;107m▆\e[0m\e[33;107m▅\e[0m\e[92;107m▄\e[0m\e[32;107m▃\e[0m\e[96;107m▂\e[0m\e[36;107m▁\e[0m\e[94;107m_\e[0m\e[34;107m▿\e[0m",
+        },
+        param_combos_with_prefix: {
+          params_main.merge({in_bw: true}) => "-1.0▿-0.8_-0.6▁-0.4▂-0.2▃0.0▄0.2▅0.4▆0.6▇0.8█1.0▴",
+          params_main.merge({in_bw: true, inverted_chars: true}) => "-1.0▴-0.8█-0.6▇-0.4▆-0.2▅0.0▄0.2▃0.4▂0.6▁0.8_1.0▿",
+          # Below are dups of above since in_bw is true
+          # params_main.merge({in_bw: true, inverted_colors: true}) => "",
+          # params_main.merge({in_bw: true, inverted_chars: true, inverted_colors: true}) => ""
+          params_main => "-1.0\e[34;107m▿\e[0m-0.8\e[94;107m_\e[0m-0.6\e[36;107m▁\e[0m-0.4\e[96;107m▂\e[0m-0.2\e[32;107m▃\e[0m0.0\e[92;107m▄\e[0m0.2\e[33;107m▅\e[0m0.4\e[95;107m▆\e[0m0.6\e[35;107m▇\e[0m0.8\e[91;107m█\e[0m1.0\e[31;107m▴\e[0m",
+          params_main.merge({inverted_chars: true}) => "-1.0\e[34;107m▴\e[0m-0.8\e[94;107m█\e[0m-0.6\e[36;107m▇\e[0m-0.4\e[96;107m▆\e[0m-0.2\e[32;107m▅\e[0m0.0\e[92;107m▄\e[0m0.2\e[33;107m▃\e[0m0.4\e[95;107m▂\e[0m0.6\e[35;107m▁\e[0m0.8\e[91;107m_\e[0m1.0\e[31;107m▿\e[0m",
+          params_main.merge({inverted_colors: true}) => "-1.0\e[31;107m▿\e[0m-0.8\e[91;107m_\e[0m-0.6\e[35;107m▁\e[0m-0.4\e[95;107m▂\e[0m-0.2\e[33;107m▃\e[0m0.0\e[92;107m▄\e[0m0.2\e[32;107m▅\e[0m0.4\e[96;107m▆\e[0m0.6\e[36;107m▇\e[0m0.8\e[94;107m█\e[0m1.0\e[34;107m▴\e[0m",
+          params_main.merge({inverted_chars: true, inverted_colors: true}) => "-1.0\e[31;107m▴\e[0m-0.8\e[91;107m█\e[0m-0.6\e[35;107m▇\e[0m-0.4\e[95;107m▆\e[0m-0.2\e[33;107m▅\e[0m0.0\e[92;107m▄\e[0m0.2\e[32;107m▃\e[0m0.4\e[96;107m▂\e[0m0.6\e[36;107m▁\e[0m0.8\e[94;107m_\e[0m1.0\e[34;107m▿\e[0m",
+        },
+      }
 
-              puts plot + "\n"
+      permutations = AsciiBarCharter.permutations
 
-              plot.should eq(expected_graph_chars)
-            end
-          end
+      context "without numeric prefix" do
+        permutation_subset = permutations[:param_combos_without_prefix]
+        expected_permutations[:param_combos_without_prefix].each do |params, expected_string|
+          it "given params of #{params}, it returns expected permutations" do
+            permutation_subset[params].should eq(expected_string)
 
-          describe "and reverse enabled" do
-            it "will return color-escaped bars from without prefix numbers in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = false
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = false
-              reversed = true
-              expected_graph_chars = "\e[31;47m_\e[0m" +
-                                     "\e[31;47m▁\e[0m" +
-                                     "\e[91;47m▂\e[0m" +
-                                     "\e[91;47m▃\e[0m" +
-                                     "\e[33;47m▄\e[0m" +
-                                     "\e[33;47m▅\e[0m" +
-                                     "\e[92;47m▆\e[0m" +
-                                     "\e[92;47m▇\e[0m" +
-                                     "\e[32;47m█\e[0m" +
-                                     "\e[32;47m▉\e[0m"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
+            # permutations[:param_combos_without_prefix].each { |_params, string| puts string }
+            # permutations[:param_combos_with_prefix].each { |_params, string| puts string }
           end
         end
       end
 
-      describe "color disabled" do
-        describe "prefix enabled" do
-          describe "and reverse disabled" do
-            it "will return color-escaped bars from with prefix numbers ranging from 0.0 to 1.0 in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = true
-              reversed = false
-              expected_graph_chars = "0.0_0.1▁0.2▂0.3▃0.4▄0.5▅0.6▆0.7▇0.8█0.9▉"
+      context "with numeric prefix" do
+        permutation_subset = permutations[:param_combos_with_prefix]
+        expected_permutations[:param_combos_with_prefix].each do |params, expected_string|
+          it "given params of #{params}, it returns expected permutations" do
+            permutation_subset[params].should eq(expected_string)
 
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
-          end
-
-          describe "and reverse enabled" do
-            it "it will return color-escaped bars from with prefix numbers ranging from 0.0 to 1.0 in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = true
-              reversed = true
-              expected_graph_chars = "0.0_0.1▁0.2▂0.3▃0.4▄0.5▅0.6▆0.7▇0.8█0.9▉"
-
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              # Expected: "0.0\e[34;47m_\e[0m0.1\e[32;47m▁\e[0m0.2\e[32;47m▂\e[0m0.3\e[92;47m▃\e[0m0.4\e[92;47m▄\e[0m0.5\e[33;47m▅\e[0m0.6\e[33;47m▆\e[0m0.7\e[91;47m▇\e[0m0.8\e[91;47m█\e[0m0.9\e[31;47m▉\e[0m"
-              # got: "0.0\e[31;47m_\e[0m0.1\e[31;47m▁\e[0m0.2\e[91;47m▂\e[0m0.3\e[91;47m▃\e[0m0.4\e[33;47m▄\e[0m0.5\e[33;47m▅\e[0m0.6\e[92;47m▆\e[0m0.7\e[92;47m▇\e[0m0.8\e[32;47m█\e[0m0.9\e[32;47m▉\e[0m"
-
-              plot.should eq(expected_graph_chars)
-            end
+            # permutations[:param_combos_without_prefix].each { |_params, string| puts string }
+            # permutations[:param_combos_with_prefix].each { |_params, string| puts string }
           end
         end
+      end
+    end
 
-        describe "prefix disabled" do
-          describe "and reverse disabled" do
-            it "will return color-escaped bars from without prefix numbers in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = false
-              reversed = false
-              expected_graph_chars = "_▁▂▃▄▅▆▇█▉"
+    context "with alternative bar chars and colors" do
+      bar_chars = AsciiBarCharter::BAR_CHARS_ALT
+      bar_colors = AsciiBarCharter::BAR_COLORS_ALT
+      params_main_alt = params_main.merge({
+        bar_chars:  bar_chars,
+        bar_colors: bar_colors,
+      })
+      expected_permutations = {
+        param_combos_without_prefix: {
+          params_main_alt.merge({in_bw: true}) => "■□▫☾◵◉◷☽▹▷▶",
+          params_main_alt.merge({in_bw: true, inverted_chars: true}) => "▶▷▹☽◷◉◵☾▫□■",
+          # Below are dups of above since in_bw is true
+          # params_main_alt.merge({in_bw: true, inverted_colors: true}) => "",
+          # params_main_alt.merge({in_bw: true, inverted_chars: true, inverted_colors: true}) => ""
+          params_main_alt => "\e[35;107m■\e[0m\e[31;107m□\e[0m\e[91;107m▫\e[0m\e[93;107m☾\e[0m\e[33;107m◵\e[0m\e[30;107m◉\e[0m\e[36;107m◷\e[0m\e[96;107m☽\e[0m\e[92;107m▹\e[0m\e[32;107m▷\e[0m\e[34;107m▶\e[0m",
+          params_main_alt.merge({inverted_chars: true}) => "\e[35;107m▶\e[0m\e[31;107m▷\e[0m\e[91;107m▹\e[0m\e[93;107m☽\e[0m\e[33;107m◷\e[0m\e[30;107m◉\e[0m\e[36;107m◵\e[0m\e[96;107m☾\e[0m\e[92;107m▫\e[0m\e[32;107m□\e[0m\e[34;107m■\e[0m",
+          params_main_alt.merge({inverted_colors: true}) => "\e[34;107m■\e[0m\e[32;107m□\e[0m\e[92;107m▫\e[0m\e[96;107m☾\e[0m\e[36;107m◵\e[0m\e[30;107m◉\e[0m\e[33;107m◷\e[0m\e[93;107m☽\e[0m\e[91;107m▹\e[0m\e[31;107m▷\e[0m\e[35;107m▶\e[0m",
+          params_main_alt.merge({inverted_chars: true, inverted_colors: true}) => "\e[34;107m▶\e[0m\e[32;107m▷\e[0m\e[92;107m▹\e[0m\e[96;107m☽\e[0m\e[36;107m◷\e[0m\e[30;107m◉\e[0m\e[33;107m◵\e[0m\e[93;107m☾\e[0m\e[91;107m▫\e[0m\e[31;107m□\e[0m\e[35;107m■\e[0m",
+        },
+        param_combos_with_prefix: {
+          params_main_alt.merge({in_bw: true}) => "-1.0■-0.8□-0.6▫-0.4☾-0.2◵0.0◉0.2◷0.4☽0.6▹0.8▷1.0▶",
+          params_main_alt.merge({in_bw: true, inverted_chars: true}) => "-1.0▶-0.8▷-0.6▹-0.4☽-0.2◷0.0◉0.2◵0.4☾0.6▫0.8□1.0■",
+          # Below are dups of above since in_bw is true
+          # params_main_alt.merge({in_bw: true, inverted_colors: true}) => "",
+          # params_main_alt.merge({in_bw: true, inverted_chars: true, inverted_colors: true}) => ""
+          params_main_alt => "-1.0\e[35;107m■\e[0m-0.8\e[31;107m□\e[0m-0.6\e[91;107m▫\e[0m-0.4\e[93;107m☾\e[0m-0.2\e[33;107m◵\e[0m0.0\e[30;107m◉\e[0m0.2\e[36;107m◷\e[0m0.4\e[96;107m☽\e[0m0.6\e[92;107m▹\e[0m0.8\e[32;107m▷\e[0m1.0\e[34;107m▶\e[0m",
+          params_main_alt.merge({inverted_chars: true}) => "-1.0\e[35;107m▶\e[0m-0.8\e[31;107m▷\e[0m-0.6\e[91;107m▹\e[0m-0.4\e[93;107m☽\e[0m-0.2\e[33;107m◷\e[0m0.0\e[30;107m◉\e[0m0.2\e[36;107m◵\e[0m0.4\e[96;107m☾\e[0m0.6\e[92;107m▫\e[0m0.8\e[32;107m□\e[0m1.0\e[34;107m■\e[0m",
+          params_main_alt.merge({inverted_colors: true}) => "-1.0\e[34;107m■\e[0m-0.8\e[32;107m□\e[0m-0.6\e[92;107m▫\e[0m-0.4\e[96;107m☾\e[0m-0.2\e[36;107m◵\e[0m0.0\e[30;107m◉\e[0m0.2\e[33;107m◷\e[0m0.4\e[93;107m☽\e[0m0.6\e[91;107m▹\e[0m0.8\e[31;107m▷\e[0m1.0\e[35;107m▶\e[0m",
+          params_main_alt.merge({inverted_chars: true, inverted_colors: true}) => "-1.0\e[34;107m▶\e[0m-0.8\e[32;107m▷\e[0m-0.6\e[92;107m▹\e[0m-0.4\e[96;107m☽\e[0m-0.2\e[36;107m◷\e[0m0.0\e[30;107m◉\e[0m0.2\e[33;107m◵\e[0m0.4\e[93;107m☾\e[0m0.6\e[91;107m▫\e[0m0.8\e[31;107m□\e[0m1.0\e[35;107m■\e[0m",
+        },
+      }
 
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
+      permutations = AsciiBarCharter.permutations(bar_chars: bar_chars, bar_colors: bar_colors)
 
-              puts plot + "\n"
+      context "without numeric prefix" do
+        permutation_subset = permutations[:param_combos_without_prefix]
+        expected_permutations[:param_combos_without_prefix].each do |params, expected_string|
+          it "given params of #{params}, it returns expected permutations" do
+            permutation_subset[params].should eq(expected_string)
 
-              plot.should eq(expected_graph_chars)
-            end
+            # permutations[:param_combos_without_prefix].each { |_params, string| puts string }
+            # permutations[:param_combos_with_prefix].each { |_params, string| puts string }
           end
+        end
+      end
 
-          describe "and reverse enabled" do
-            it "will return color-escaped bars from without prefix numbers in green to red colors" do
-              min = 0.0
-              max = 1.0
-              precision = 2.to_i8
-              in_bw = true
-              data = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]
-              prefixed = false
-              reversed = true
-              expected_graph_chars = "_▁▂▃▄▅▆▇█▉"
+      context "with numeric prefix" do
+        permutation_subset = permutations[:param_combos_with_prefix]
+        expected_permutations[:param_combos_with_prefix].each do |params, expected_string|
+          it "given params of #{params}, it returns expected permutations" do
+            permutation_subset[params].should eq(expected_string)
 
-              charter = AsciiBarCharter.new(min, max, precision, in_bw, reversed)
-              plot = charter.plot(data, prefixed)
-
-              puts plot + "\n"
-
-              plot.should eq(expected_graph_chars)
-            end
+            # permutations[:param_combos_without_prefix].each { |_params, string| puts string }
+            # permutations[:param_combos_with_prefix].each { |_params, string| puts string }
           end
         end
       end
     end
   end
 end
+
+puts "\npermutations: "
+permutations = AsciiBarCharter.permutations
+permutations[:param_combos_without_prefix].each { |_params, string| puts string }
+permutations[:param_combos_with_prefix].each { |_params, string| puts string }
+
+puts "\npermutations(alt): "
+permutations = AsciiBarCharter.permutations(bar_chars: AsciiBarCharter::BAR_CHARS_ALT, bar_colors: AsciiBarCharter::BAR_COLORS_ALT)
+permutations[:param_combos_without_prefix].each { |_params, string| puts string }
+permutations[:param_combos_with_prefix].each { |_params, string| puts string }
