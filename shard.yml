@@ -1,5 +1,5 @@
 name: ascii_bar_charter
-version: 1.1.0
+version: 1.2.0
 
 authors:
   - Daniel Huffman <drhuffman12@gmail.com>
@@ -7,3 +7,7 @@ authors:
 crystal: 0.32.1
 
 license: MIT
+
+targets:
+  abc:
+    main: src/abc.cr

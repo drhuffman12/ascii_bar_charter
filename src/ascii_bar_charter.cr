@@ -5,7 +5,7 @@ class AsciiBarCharter
   class AsciiBarError < Exception
   end
 
-  VERSION = "1.1.0"
+  VERSION = "1.2.0"
 
   BAR_CHARS = [
     '\u25BF',
@@ -161,5 +161,31 @@ class AsciiBarCharter
   def reset_bar_colors(new_bar_colors = BAR_COLORS)
     @bar_colors = new_bar_colors
     validate!
+  end
+
+  def self.show_examples
+    puts "\npermutations: "
+    permutations = AsciiBarCharter.permutations
+    permutations[:param_combos_without_prefix].each { |_params, string| puts string }
+    permutations[:param_combos_with_prefix].each { |_params, string| puts string }
+
+    puts "\npermutations(alt): "
+    permutations = AsciiBarCharter.permutations(bar_chars: AsciiBarCharter::BAR_CHARS_ALT, bar_colors: AsciiBarCharter::BAR_COLORS_ALT)
+    permutations[:param_combos_without_prefix].each { |_params, string| puts string }
+    permutations[:param_combos_with_prefix].each { |_params, string| puts string }
+  end
+
+  def self.show_examples_with_params
+    puts 
+    permutations = AsciiBarCharter.permutations
+    permutations.each do |group,examples|
+      puts group
+      examples.each do |params,chart|
+        puts "Using the following params:"
+        puts params.pretty_inspect
+        puts "  .. will generate the following: #{chart}"
+        puts
+      end  
+    end  
   end
 end
