@@ -7,3 +7,7 @@ authors:
 crystal: 0.32.1
 
 license: MIT
+
+targets:
+  abc:
+    main: src/abc.cr
