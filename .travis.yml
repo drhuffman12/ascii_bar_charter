@@ -6,7 +6,7 @@
 #   - crystal tool format --check
 
 dist: xenial
-# dist: bionic
+# dist: bionic # ... is missing dependencies
 language: crystal
 crystal:
   - latest
