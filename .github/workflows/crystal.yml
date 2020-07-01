@@ -2,9 +2,11 @@ name: Crystal CI
 
 on:
   push:
-    branches: [ master, drhuffman12/* ]
+    branches: [ master ]
+    # branches: [ master, drhuffman12/* ]
   pull_request:
-    branches: [ master, drhuffman12/* ]
+    branches: [ master ]
+    # branches: [ master, drhuffman12/* ]
 
 jobs:
   build:
@@ -19,5 +21,5 @@ jobs:
     - name: Install dependencies
       run: shards install
     - name: Run tests
-      # run: crystal spec
-      run: bin/test
+      run: crystal spec
+      # run: bin/test
