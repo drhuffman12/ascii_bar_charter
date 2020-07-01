@@ -5,8 +5,8 @@
 #   - crystal spec
 #   - crystal tool format --check
 
-# dist: xenial
-dist: bionic
+dist: xenial
+# dist: bionic
 language: crystal
 crystal:
   - latest
