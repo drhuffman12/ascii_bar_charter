@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: shards install
     - name: Check color enabled
-      run: echo $NO_COLOR
+      run: NO_COLOR=0 echo $NO_COLOR
     - name: Run tests
-      run: crystal spec
+      run: NO_COLOR=0 crystal spec
       # run: bin/test
