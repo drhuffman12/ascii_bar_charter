@@ -6,6 +6,7 @@ class AsciiBarCharter
   end
 
   VERSION = "1.2.0"
+  # VERSION = "1.3.0"
 
   BAR_CHARS = [
     '\u25BF',
