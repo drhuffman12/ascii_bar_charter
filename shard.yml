@@ -4,7 +4,7 @@ version: 1.3.2
 authors:
   - Daniel Huffman <drhuffman12@gmail.com>
 
-crystal: >= 0.35
+crystal: ">= 0.35.1"
 
 license: MIT
 
