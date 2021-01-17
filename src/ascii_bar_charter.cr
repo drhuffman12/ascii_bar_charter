@@ -5,7 +5,7 @@ class AsciiBarCharter
   class AsciiBarError < Exception
   end
 
-  VERSION = "1.3.0"
+  VERSION = {{ `shards version "#{__DIR__}"`.chomp.stringify }}
 
   BAR_CHARS = [
     '\u25BF',
